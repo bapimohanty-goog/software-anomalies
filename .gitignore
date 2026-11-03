@@ -1,0 +1,22 @@
+# Exclude confidential / source PDF proposals
+*.pdf
+
+# Environment variables & secrets
+.env
+agents/**/.env
+
+# Python virtual environments & caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Generated anomaly reports
+reports/
+
+# macOS / IDE artifacts
+.DS_Store
+.idea/
+.vscode/
