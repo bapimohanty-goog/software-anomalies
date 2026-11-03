@@ -18,9 +18,31 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
 
 ---
 
-## 1. Prerequisites & Setup in Argolis
+## 1. Installation from GitHub & Argolis Setup
 
-1. **Authenticate with your Argolis GCP account and enable Vertex AI API**:
+1. **Clone the repository from GitHub**:
+   ```bash
+   # Using standard git:
+   git clone https://github.com/bapimohanty-goog/software-anomalies.git
+   cd software-anomalies
+
+   # Or using GitHub CLI:
+   gh repo clone bapimohanty-goog/software-anomalies
+   cd software-anomalies
+   ```
+
+2. **Create a Python virtual environment and install dependencies**:
+   ```bash
+   python3 -m venv .venv
+   .venv/bin/pip install --upgrade pip
+   .venv/bin/pip install -r requirements.txt
+   ```
+   *(Optional) You can also install the dependencies directly from the remote GitHub repository:*
+   ```bash
+   .venv/bin/pip install -r https://raw.githubusercontent.com/bapimohanty-goog/software-anomalies/main/requirements.txt
+   ```
+
+3. **Authenticate with your Argolis GCP account and enable Vertex AI API**:
    ```bash
    gcloud auth login
    gcloud config set project YOUR_ARGOLIS_PROJECT_ID
@@ -28,18 +50,15 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
    gcloud services enable aiplatform.googleapis.com storage.googleapis.com
    ```
 
-2. **Create a Python virtual environment and install dependencies**:
-   ```bash
-   python3 -m venv .venv
-   .venv/bin/pip install -r requirements.txt
-   ```
-
-3. **Configure environment variables**:
-   Copy [`.env.example`](./.env.example) to `.env` (and/or inside each agent subfolder) and set your Argolis project ID:
+4. **Configure environment variables**:
+   Copy [`.env.example`](./.env.example) to `.env` in the repository root and each agent directory:
    ```bash
    cp .env.example .env
+   cp agents/phase1_core_triage/.env.example agents/phase1_core_triage/.env
+   cp agents/phase2_contextual_depth/.env.example agents/phase2_contextual_depth/.env
+   cp agents/phase3_thought_partner/.env.example agents/phase3_thought_partner/.env
    ```
-   Update `.env`:
+   Update `.env` (and/or the agent `.env` files) with your Argolis project details:
    ```env
    GOOGLE_GENAI_USE_VERTEXAI=TRUE
    GOOGLE_CLOUD_PROJECT=your-argolis-project-id
