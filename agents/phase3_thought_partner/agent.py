@@ -9,7 +9,7 @@ import os
 from google.adk.agents import Agent
 from .tools import save_anomaly_report
 
-MODEL_NAME = os.environ.get("ADK_MODEL", "gemini-2.5-flash")
+MODEL_NAME = os.environ.get("ADK_MODEL", "gemini-3.8-flash")
 
 PHASE_3_INSTRUCTION = """You are the Dexcom SW Anomaly Thought Partner. Your role is to elevate the quality of software anomaly reporting by guiding engineers through a structured root-cause and risk assessment.
 

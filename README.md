@@ -45,7 +45,7 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
    GOOGLE_CLOUD_PROJECT=your-argolis-project-id
    GOOGLE_CLOUD_LOCATION=us-central1
    STAGING_BUCKET=gs://your-argolis-staging-bucket
-   ADK_MODEL=gemini-2.5-flash
+   ADK_MODEL=gemini-3.8-flash
    ```
 
 ---
