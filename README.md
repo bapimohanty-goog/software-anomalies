@@ -42,12 +42,12 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
    .venv/bin/pip install -r https://raw.githubusercontent.com/bapimohanty-goog/software-anomalies/main/requirements.txt
    ```
 
-3. **Authenticate with your Argolis GCP account and enable Vertex AI API**:
+3. **Authenticate with your Argolis GCP account and enable Vertex AI & Discovery Engine APIs**:
    ```bash
    gcloud auth login
    gcloud config set project YOUR_ARGOLIS_PROJECT_ID
    gcloud auth application-default login
-   gcloud services enable aiplatform.googleapis.com storage.googleapis.com
+   gcloud services enable aiplatform.googleapis.com storage.googleapis.com discoveryengine.googleapis.com
    ```
 
 4. **Configure environment variables**:
@@ -65,6 +65,10 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
    GOOGLE_CLOUD_LOCATION=us-central1
    STAGING_BUCKET=gs://your-argolis-staging-bucket
    ADK_MODEL=gemini-3.8-flash
+
+   # Optional: Gemini Enterprise App ID to register the agents in Gemini Enterprise
+   GEMINI_ENTERPRISE_APP_ID=your-gemini-enterprise-app-id
+   GEMINI_ENTERPRISE_LOCATION=global
    ```
 
 ---
@@ -136,4 +140,59 @@ Deploy all 3 agents (or a single phase with `--phase 1|2|3`):
   --location us-central1 \
   --staging-bucket gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
   --phase all
+```
+
+---
+
+## 4. Adding the Agents to a Gemini Enterprise App
+
+[`deploy_argolis.py`](./deploy_argolis.py) includes built-in support for registering the deployed Vertex AI Agent Engine agents directly into a **Gemini Enterprise** (Discovery Engine / Agentspace) application via the Discovery Engine `v1alpha` API.
+
+### Option A: Deploy to Vertex AI Agent Engine AND Register in Gemini Enterprise in One Step
+
+Pass `--gemini-enterprise-app-id` (or set `GEMINI_ENTERPRISE_APP_ID` in `.env`):
+```bash
+.venv/bin/python deploy_argolis.py \
+  --project YOUR_ARGOLIS_PROJECT_ID \
+  --location us-central1 \
+  --staging-bucket gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
+  --gemini-enterprise-app-id YOUR_GEMINI_ENTERPRISE_APP_ID \
+  --gemini-enterprise-location global \
+  --phase all
+```
+
+### Option B: Register an Already-Deployed Agent in Gemini Enterprise (`--register-only`)
+
+If you already deployed an agent to Vertex AI Agent Engine (e.g., via `adk deploy agent_engine`) and have its `reasoningEngines` resource name, you can add it to your Gemini Enterprise app without redeploying:
+```bash
+.venv/bin/python deploy_argolis.py \
+  --project YOUR_ARGOLIS_PROJECT_ID \
+  --gemini-enterprise-app-id YOUR_GEMINI_ENTERPRISE_APP_ID \
+  --gemini-enterprise-location global \
+  --register-only \
+  --phase 1 \
+  --reasoning-engine projects/YOUR_ARGOLIS_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID
+```
+
+### Option C: Direct REST API (`curl`) Registration
+
+You can also register any of the 3 deployed Reasoning Engines via `curl`:
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "Content-Type: application/json" \
+  -H "X-Goog-User-Project: YOUR_ARGOLIS_PROJECT_ID" \
+  "https://discoveryengine.googleapis.com/v1alpha/projects/YOUR_ARGOLIS_PROJECT_ID/locations/global/collections/default_collection/engines/YOUR_GEMINI_ENTERPRISE_APP_ID/assistants/default_assistant/agents" \
+  -d '{
+    "displayName": "Dexcom-SW-Anomaly-Thought-Partner-Phase1-Core-Triage",
+    "description": "Phase 1 (Weeks 1-2): 3-Step Core Triage (Manifestation, Triggering Event, Reproducibility)",
+    "adk_agent_definition": {
+      "tool_settings": {
+        "tool_description": "Use this agent when an engineer wants to quickly triage and log a software anomaly using the Phase 1 (3-step Core Triage) interview."
+      },
+      "provisioned_reasoning_engine": {
+        "reasoning_engine": "projects/YOUR_ARGOLIS_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID"
+      }
+    }
+  }'
 ```
