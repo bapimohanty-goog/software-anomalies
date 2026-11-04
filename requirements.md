@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary & Purpose
 
-This document defines the functional, domain, non-functional, and rollout requirements for the **Dexcom Software Health Hazard Assessment (SW HHA) Anomaly Process** and its AI-guided implementation, the **Dexcom SW Anomaly Thought Partner**.
+This document defines the functional, domain, non-functional, and rollout requirements for the **Software Health Hazard Assessment (SW HHA) Anomaly Process** and its AI-guided implementation, the **SW Anomaly Thought Partner**.
 
 These requirements synthesize two foundational proposals:
 1. **Proposal for a more Effective/Efficient Process to Assess/Address SW Anomalies (March 2026)**: Defines the complete 8-part domain framework for assessing software anomalies, estimating risk ($\text{Risk} = \text{Frequency} \times \text{Severity}$), and conducting mandatory retrospectives for continuous improvement.
@@ -44,9 +44,9 @@ To produce a clear, vivid (self-explanatory) summary description and recommendat
 
 ### DR-4: Triggering Event Taxonomy
 * **Requirement**: Identify the exact triggering event or sequence of events that causes the anomaly, categorized into one of three trigger sources:
-  1. **External Trigger** (neither user action nor Dexcom action): e.g., a smart device OS update. Must document whether and how the user is made aware.
+  1. **External Trigger** (neither user action nor application/system action): e.g., a smart device OS update. Must document whether and how the user is made aware.
   2. **User Action Trigger**: Given the state of the App, the exact sequence of user actions that triggers the anomaly, and what the user perceives at each step.
-  3. **Dexcom Action Trigger**: e.g., a Dexcom App update or the arrival of a data packet from the wearable to the App. Must document whether and how the user is made aware.
+  3. **Application / System Action Trigger**: e.g., an App update or the arrival of a data packet from the wearable to the App. Must document whether and how the user is made aware.
 * **Downstream Usage**: Combined with Pre-Anomaly System State (DR-3) to estimate **Occurrence Frequency**.
 
 ### DR-5: Post-Anomaly System State & Recovery Behavior
@@ -81,7 +81,7 @@ To produce a clear, vivid (self-explanatory) summary description and recommendat
 
 ## 4. Functional Requirements: AI "Anomaly Thought Partner"
 
-To prevent Day-1 adoption friction from presenting all 8 assessment dimensions as a static blank form, the system SHALL be implemented as an interactive conversational AI agent (**Dexcom SW Anomaly Thought Partner**) rolled out across three progressive phases.
+To prevent Day-1 adoption friction from presenting all 8 assessment dimensions as a static blank form, the system SHALL be implemented as an interactive conversational AI agent (**SW Anomaly Thought Partner**) rolled out across three progressive phases.
 
 ### 4.1 Core Conversational Engine Requirements
 
@@ -114,7 +114,7 @@ Upon completion of the 3 steps, the agent SHALL generate a **Core Bug Report** c
 
 #### FR-P1-3: Phase 1 Baseline System Prompt
 ```text
-You are the Dexcom SW Anomaly Thought Partner. Your job is to help engineers rapidly and accurately log software anomalies. You must act as a helpful guide, making their job easier and faster.
+You are the SW Anomaly Thought Partner. Your job is to help engineers rapidly and accurately log software anomalies. You must act as a helpful guide, making their job easier and faster.
 
 INSTRUCTIONS:
 You will ask the user exactly THREE questions to understand the anomaly. Ask them sequentially—do NOT ask the next question until the user has answered the current one. If their answer is too brief, gently ask for one clarifying detail before moving on.
@@ -156,7 +156,7 @@ Upon completion of the 5 steps, the agent SHALL synthesize the answers into a **
 
 #### FR-P2-3: Phase 2 Baseline System Prompt
 ```text
-You are the Dexcom SW Anomaly Thought Partner. Your job is to help engineers log comprehensive software anomalies. Act as a senior QA guide, ensuring no technical context is missed.
+You are the SW Anomaly Thought Partner. Your job is to help engineers log comprehensive software anomalies. Act as a senior QA guide, ensuring no technical context is missed.
 
 INSTRUCTIONS:
 You will guide the user through a 5-step interview. Ask one question at a time. Wait for their response before proceeding.
@@ -193,7 +193,7 @@ Upon completion of the 4 steps, the agent SHALL generate a **Comprehensive QAC R
 
 #### FR-P3-3: Phase 3 Baseline System Prompt
 ```text
-You are the Dexcom SW Anomaly Thought Partner. Your role is to elevate the quality of software anomaly reporting by guiding engineers through a structured root-cause and risk assessment.
+You are the SW Anomaly Thought Partner. Your role is to elevate the quality of software anomaly reporting by guiding engineers through a structured root-cause and risk assessment.
 
 INSTRUCTIONS:
 Interview the user step-by-step. Ask one question at a time. If the user struggles with Risk or Root Cause, offer helpful suggestions based on their previous answers.
@@ -212,7 +212,7 @@ Generate a "Comprehensive QAC Recommendation Report". Format it cleanly so Quali
 
 ## 5. Non-Functional Requirements (NFRs)
 
-* **NFR-1 (Security & Confidentiality)**: All anomaly interviews and report generation MUST run within a Dexcom-approved secure AI chat environment capable of handling Dexcom Confidential information, proprietary software architecture details, and Health Hazard Assessment (HHA) data.
+* **NFR-1 (Security & Confidentiality)**: All anomaly interviews and report generation MUST run within an approved secure AI chat environment capable of handling confidential information, proprietary software architecture details, and Health Hazard Assessment (HHA) data.
 * **NFR-2 (Low Cognitive Load & Conversational Ergonomics)**: The user experience MUST avoid overwhelming reporters with multi-page forms or walls of text; prompts must remain concise and conversational.
 * **NFR-3 (Output Standardization & Rapid Reviewability)**: Generated reports MUST follow a consistent, predictable Markdown structure so QAC reviewers and PMs can rapidly locate manifestation, system state, risk calculations, and retrospective conclusions without re-formatting.
 * **NFR-4 (Seamless Phase Upgradeability)**: The system architecture ("brain"/system prompt configuration) MUST support updating from Phase 1 to Phase 2 and Phase 3 centrally without requiring engineers to learn a new tool or interface.
@@ -259,7 +259,7 @@ Baseline metrics MUST be recorded prior to launching the Phase 1 pilot and measu
 | **DR-1** | Discovery method capture (Active testing vs. Passive observation/Crashlytics) | March 2026 SW HHA Process Proposal (p. 1); Progressive Rollout Proposal (Phase 2) |
 | **DR-2** | User manifestation capture & Severity assessment basis | March 2026 SW HHA Process Proposal (pp. 1–2); Progressive Rollout Proposal (Phases 1–3) |
 | **DR-3** | Pre-anomaly system state (iOS/Android permutations, memory, battery, race conditions) | March 2026 SW HHA Process Proposal (p. 1); Progressive Rollout Proposal (Phases 2–3) |
-| **DR-4** | Triggering event taxonomy (External OS, User action sequence, Dexcom App/wearable packet) | March 2026 SW HHA Process Proposal (p. 1); Progressive Rollout Proposal (Phases 1–3) |
+| **DR-4** | Triggering event taxonomy (External OS, User action sequence, App/wearable packet) | March 2026 SW HHA Process Proposal (p. 1); Progressive Rollout Proposal (Phases 1–3) |
 | **DR-5** | Post-anomaly system state (Recurrence vs. one-and-done, uninstall/reinstall recovery) | March 2026 SW HHA Process Proposal (p. 1); Progressive Rollout Proposal (Phases 2–3) |
 | **DR-6** | Reproducibility, root-cause understanding, and reproducible fix definition | March 2026 SW HHA Process Proposal (p. 1); Progressive Rollout Proposal (Phases 1–3) |
 | **DR-7** | Defendable Risk Estimate ($\text{Risk} = \text{Frequency} \times \text{Severity}$) calibrated with analytics/complaints | March 2026 SW HHA Process Proposal (p. 2); Progressive Rollout Proposal (Phase 3) |

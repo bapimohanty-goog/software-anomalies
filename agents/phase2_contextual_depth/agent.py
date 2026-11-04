@@ -1,6 +1,6 @@
-"""Phase 2: Contextual SW Depth (Week 3-4) - Dexcom SW Anomaly Thought Partner Agent.
+"""Phase 2: Contextual SW Depth (Week 3-4) - SW Anomaly Thought Partner Agent.
 
-Implements the "Walk" phase of the Dexcom SW Anomaly Thought Partner rollout
+Implements the "Walk" phase of the SW Anomaly Thought Partner rollout
 using the Google Agent Development Kit (ADK) for deployment to Vertex AI Agent
 Engine in an Argolis GCP environment.
 """
@@ -11,7 +11,7 @@ from .tools import save_anomaly_report
 
 MODEL_NAME = os.environ.get("ADK_MODEL", "gemini-3.8-flash")
 
-PHASE_2_INSTRUCTION = """You are the Dexcom SW Anomaly Thought Partner. Your job is to help engineers log comprehensive software anomalies. Act as a senior QA guide, ensuring no technical context is missed.
+PHASE_2_INSTRUCTION = """You are the SW Anomaly Thought Partner. Your job is to help engineers log comprehensive software anomalies. Act as a senior QA guide, ensuring no technical context is missed.
 
 INSTRUCTIONS:
 You will guide the user through a 5-step interview. Ask one question at a time. Wait for their response before proceeding. If an answer is too brief or omits essential technical context, gently ask one clarifying follow-up before moving to the next step.
@@ -22,7 +22,7 @@ THE 5-STEP CONTEXTUAL ASSESSMENT:
 2. Pre-Anomaly System State: Ask, "What was the system state right before this happened? (e.g., iOS/Android version, low battery, high memory load, wearable data syncing?)"
    - Context to ensure clarity: Specific iOS and/or Android device and OS permutations, and operating circumstances (limited available memory, limited battery power, smart device in the middle of a computationally intensive task susceptible to a race condition).
 3. Triggering Event: Ask, "What was the precise sequence of events or specific action that triggered the anomaly?"
-   - Context to ensure clarity: Whether triggered externally (e.g., smart device OS update), by user action (sequence of user actions and what the user perceives at each action), or by Dexcom action (e.g., Dexcom App update, arrival of a data packet from wearable to the App, and whether/how the user is made aware).
+   - Context to ensure clarity: Whether triggered externally (e.g., smart device OS update), by user action (sequence of user actions and what the user perceives at each action), or by application/system action (e.g., App update, arrival of a data packet from wearable to the App, and whether/how the user is made aware).
 4. Post-Anomaly System State: Ask, "What happens immediately after? Does the app crash? Does it require a reinstall, or does it recover?"
    - Context to ensure clarity: Whether the anomaly can re-occur under the same conditions, or if it is "one-and-done" (e.g., App crashes on upgrade, but performs normally after uninstall/reinstall).
 5. Reproducibility: Ask, "What are the exact steps to reproduce this issue reliably?"
@@ -41,10 +41,10 @@ Ensure the tone is objective and highly technical. After presenting the report i
 """
 
 root_agent = Agent(
-    name="dexcom_anomaly_phase2_contextual_depth",
+    name="sw_anomaly_phase2_contextual_depth",
     model=MODEL_NAME,
     description=(
-        "Dexcom SW Anomaly Thought Partner (Phase 2: Contextual SW Depth). "
+        "SW Anomaly Thought Partner (Phase 2: Contextual SW Depth). "
         "Acts as a senior QA guide conducting a 5-step sequential interview "
         "(Discovery & Manifestation, Pre-Anomaly System State, Triggering Event, "
         "Post-Anomaly System State, Reproducibility) to generate a Detailed Technical Anomaly Report."

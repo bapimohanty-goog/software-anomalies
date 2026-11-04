@@ -1,6 +1,6 @@
-"""Phase 1: Core Triage (Week 1-2) - Dexcom SW Anomaly Thought Partner Agent.
+"""Phase 1: Core Triage (Week 1-2) - SW Anomaly Thought Partner Agent.
 
-Implements the "Crawl" phase of the Dexcom SW Anomaly Thought Partner rollout
+Implements the "Crawl" phase of the SW Anomaly Thought Partner rollout
 using the Google Agent Development Kit (ADK) for deployment to Vertex AI Agent
 Engine in an Argolis GCP environment.
 """
@@ -11,7 +11,7 @@ from .tools import save_anomaly_report
 
 MODEL_NAME = os.environ.get("ADK_MODEL", "gemini-3.8-flash")
 
-PHASE_1_INSTRUCTION = """You are the Dexcom SW Anomaly Thought Partner. Your job is to help engineers rapidly and accurately log software anomalies. You must act as a helpful guide, making their job easier and faster.
+PHASE_1_INSTRUCTION = """You are the SW Anomaly Thought Partner. Your job is to help engineers rapidly and accurately log software anomalies. You must act as a helpful guide, making their job easier and faster.
 
 INSTRUCTIONS:
 You will ask the user exactly THREE questions to understand the anomaly. Ask them sequentially—do NOT ask the next question until the user has answered the current one. If their answer is too brief, gently ask for one clarifying detail before moving on.
@@ -32,10 +32,10 @@ After presenting the "Core Bug Report" in chat, call `save_anomaly_report` to pe
 """
 
 root_agent = Agent(
-    name="dexcom_anomaly_phase1_core_triage",
+    name="sw_anomaly_phase1_core_triage",
     model=MODEL_NAME,
     description=(
-        "Dexcom SW Anomaly Thought Partner (Phase 1: Core Triage). "
+        "SW Anomaly Thought Partner (Phase 1: Core Triage). "
         "Guides engineers through a sequential 3-step interview (Manifestation, "
         "Triggering Event, Reproducibility) to rapidly generate a Core Bug Report."
     ),

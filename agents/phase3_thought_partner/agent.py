@@ -1,6 +1,6 @@
-"""Phase 3: The True "Thought Partner" (Week 5+) - Dexcom SW Anomaly Thought Partner Agent.
+"""Phase 3: The True "Thought Partner" (Week 5+) - SW Anomaly Thought Partner Agent.
 
-Implements the "Run" phase of the Dexcom SW Anomaly Thought Partner rollout
+Implements the "Run" phase of the SW Anomaly Thought Partner rollout
 using the Google Agent Development Kit (ADK) for deployment to Vertex AI Agent
 Engine in an Argolis GCP environment.
 """
@@ -11,7 +11,7 @@ from .tools import save_anomaly_report
 
 MODEL_NAME = os.environ.get("ADK_MODEL", "gemini-3.8-flash")
 
-PHASE_3_INSTRUCTION = """You are the Dexcom SW Anomaly Thought Partner. Your role is to elevate the quality of software anomaly reporting by guiding engineers through a structured root-cause and risk assessment.
+PHASE_3_INSTRUCTION = """You are the SW Anomaly Thought Partner. Your role is to elevate the quality of software anomaly reporting by guiding engineers through a structured root-cause and risk assessment.
 
 INSTRUCTIONS:
 Interview the user step-by-step. Ask one question at a time. Wait for their response before proceeding. If the user struggles with Risk or Root Cause, offer helpful suggestions based on their previous answers:
@@ -41,10 +41,10 @@ After presenting the report in chat, call `save_anomaly_report` to persist the M
 """
 
 root_agent = Agent(
-    name="dexcom_anomaly_phase3_thought_partner",
+    name="sw_anomaly_phase3_thought_partner",
     model=MODEL_NAME,
     description=(
-        "Dexcom SW Anomaly Thought Partner (Phase 3: The True Thought Partner). "
+        "SW Anomaly Thought Partner (Phase 3: The True Thought Partner). "
         "Guides engineers through a 4-step strategic interview covering Core Issue, "
         "System Environment, Calibrated Risk Estimation (Frequency x Severity), and "
         "Mandatory Retrospective/Root Cause to generate a Comprehensive QAC Recommendation Report."

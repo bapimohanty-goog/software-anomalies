@@ -1,1 +1,1 @@
-"""Dexcom SW Anomaly Thought Partner - 3-Phase ADK Agents Package."""
+"""SW Anomaly Thought Partner - 3-Phase ADK Agents Package."""

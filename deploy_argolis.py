@@ -1,4 +1,4 @@
-"""Deploy the 3 Dexcom SW Anomaly Thought Partner ADK Agents to Vertex AI Agent Engine
+"""Deploy the 3 SW Anomaly Thought Partner ADK Agents to Vertex AI Agent Engine
 and optionally register them in a Gemini Enterprise (Agentspace) App in Argolis.
 
 Usage:
@@ -44,7 +44,7 @@ from agents.phase3_thought_partner.agent import root_agent as phase3_agent
 
 AGENT_REGISTRY: dict[str, dict[str, Any]] = {
     "1": {
-        "display_name": "Dexcom-SW-Anomaly-Thought-Partner-Phase1-Core-Triage",
+        "display_name": "SW-Anomaly-Thought-Partner-Phase1-Core-Triage",
         "description": (
             "Phase 1 (Weeks 1-2): 3-Step Core Triage (Manifestation, Triggering Event, "
             "Reproducibility) to rapidly generate a Core Bug Report."
@@ -58,7 +58,7 @@ AGENT_REGISTRY: dict[str, dict[str, Any]] = {
         "extra_packages": ["agents/phase1_core_triage"],
     },
     "2": {
-        "display_name": "Dexcom-SW-Anomaly-Thought-Partner-Phase2-Contextual-Depth",
+        "display_name": "SW-Anomaly-Thought-Partner-Phase2-Contextual-Depth",
         "description": (
             "Phase 2 (Weeks 3-4): 5-Step Contextual SW Depth (Discovery, Pre/Post System State, "
             "Triggering Event, Reproducibility) to generate a Detailed Technical Anomaly Report."
@@ -73,7 +73,7 @@ AGENT_REGISTRY: dict[str, dict[str, Any]] = {
         "extra_packages": ["agents/phase2_contextual_depth"],
     },
     "3": {
-        "display_name": "Dexcom-SW-Anomaly-Thought-Partner-Phase3-Thought-Partner",
+        "display_name": "SW-Anomaly-Thought-Partner-Phase3-Thought-Partner",
         "description": (
             "Phase 3 (Week 5+): 4-Step Full QAC Assessment (Core Issue, Environment, "
             "Risk = Frequency x Severity, Retrospective) to generate a Comprehensive QAC Recommendation Report."
@@ -190,7 +190,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(
         description=(
-            "Deploy Dexcom SW Anomaly Thought Partner ADK Agents to Vertex AI Agent Engine "
+            "Deploy SW Anomaly Thought Partner ADK Agents to Vertex AI Agent Engine "
             "and optionally register them in a Gemini Enterprise App."
         )
     )

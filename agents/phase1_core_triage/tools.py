@@ -39,7 +39,7 @@ def save_anomaly_report(
         saved_path = str(file_path.resolve())
     except OSError:
         # Fallback to /tmp when running inside a read-only Vertex AI Agent Engine container
-        fallback_dir = Path("/tmp/dexcom_anomaly_reports/phase1")
+        fallback_dir = Path("/tmp/sw_anomaly_reports/phase1")
         fallback_dir.mkdir(parents=True, exist_ok=True)
         file_path = fallback_dir / filename
         file_path.write_text(report_markdown.strip() + "\n", encoding="utf-8")

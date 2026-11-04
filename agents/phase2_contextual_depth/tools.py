@@ -39,7 +39,7 @@ def save_anomaly_report(
         file_path.write_text(report_markdown.strip() + "\n", encoding="utf-8")
         saved_path = str(file_path.resolve())
     except OSError:
-        fallback_dir = Path("/tmp/dexcom_anomaly_reports/phase2")
+        fallback_dir = Path("/tmp/sw_anomaly_reports/phase2")
         fallback_dir.mkdir(parents=True, exist_ok=True)
         file_path = fallback_dir / filename
         file_path.write_text(report_markdown.strip() + "\n", encoding="utf-8")
