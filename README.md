@@ -1,6 +1,6 @@
-# SW Anomaly Thought Partner — 3-Phase ADK Agents (Argolis Deployment)
+# SW Anomaly Thought Partner — 3-Phase ADK Agents
 
-This repository implements the three progressive rollout phases (**"Crawl, Walk, Run"**) of the **SW Anomaly Thought Partner** using the **Google Agent Development Kit (ADK)** (`google-adk`), ready for local testing via `adk web` and serverless deployment to **Vertex AI Agent Engine** in your **Argolis** GCP environment.
+This repository implements the three progressive rollout phases (**"Crawl, Walk, Run"**) of the **SW Anomaly Thought Partner** using the **Google Agent Development Kit (ADK)** (`google-adk`), ready for local testing via `adk web` and serverless deployment to **Vertex AI Agent Engine** and **Gemini Enterprise** on Google Cloud.
 
 ---
 
@@ -18,7 +18,7 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
 
 ---
 
-## 1. Installation from GitHub & Argolis Setup
+## 1. Installation from GitHub & Google Cloud Setup
 
 1. **Clone the repository from GitHub**:
    ```bash
@@ -42,10 +42,10 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
    .venv/bin/pip install -r https://raw.githubusercontent.com/bapimohanty-goog/software-anomalies/main/requirements.txt
    ```
 
-3. **Authenticate with your Argolis GCP account and enable Vertex AI & Discovery Engine APIs**:
+3. **Authenticate with Google Cloud and enable Vertex AI & Discovery Engine APIs**:
    ```bash
    gcloud auth login
-   gcloud config set project YOUR_ARGOLIS_PROJECT_ID
+   gcloud config set project YOUR_GCP_PROJECT_ID
    gcloud auth application-default login
    gcloud services enable aiplatform.googleapis.com storage.googleapis.com discoveryengine.googleapis.com
    ```
@@ -58,12 +58,12 @@ All three agents include a `save_anomaly_report` tool that exports the synthesiz
    cp agents/phase2_contextual_depth/.env.example agents/phase2_contextual_depth/.env
    cp agents/phase3_thought_partner/.env.example agents/phase3_thought_partner/.env
    ```
-   Update `.env` (and/or the agent `.env` files) with your Argolis project details:
+   Update `.env` (and/or the agent `.env` files) with your Google Cloud project details:
    ```env
    GOOGLE_GENAI_USE_VERTEXAI=TRUE
-   GOOGLE_CLOUD_PROJECT=your-argolis-project-id
+   GOOGLE_CLOUD_PROJECT=your-gcp-project-id
    GOOGLE_CLOUD_LOCATION=us-central1
-   STAGING_BUCKET=gs://your-argolis-staging-bucket
+   STAGING_BUCKET=gs://your-staging-bucket
    ADK_MODEL=gemini-3.8-flash
 
    # Optional: Gemini Enterprise App ID to register the agents in Gemini Enterprise
@@ -93,52 +93,52 @@ Or run a single agent in the terminal:
 
 ---
 
-## 3. Deploying to Vertex AI Agent Engine in Argolis
+## 3. Deploying to Vertex AI Agent Engine
 
-You can deploy the 3 agents to **Vertex AI Agent Engine** in Argolis using either the **ADK CLI** (`adk deploy agent_engine`) or the included Python deployment script ([`deploy_argolis.py`](./deploy_argolis.py)).
+You can deploy the 3 agents to **Vertex AI Agent Engine** using either the **ADK CLI** (`adk deploy agent_engine`) or the included Python deployment script ([`deploy.py`](./deploy.py)).
 
 ### Option A: Deploy via ADK CLI (`adk deploy agent_engine`)
 
 Create a GCS staging bucket if you don't already have one:
 ```bash
-gcloud storage buckets create gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging --location=us-central1
+gcloud storage buckets create gs://YOUR_GCP_PROJECT_ID-adk-staging --location=us-central1
 ```
 
 Deploy each phase agent:
 ```bash
 # Deploy Phase 1: Core Triage
 .venv/bin/adk deploy agent_engine \
-  --project=YOUR_ARGOLIS_PROJECT_ID \
+  --project=YOUR_GCP_PROJECT_ID \
   --region=us-central1 \
-  --staging_bucket=gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
+  --staging_bucket=gs://YOUR_GCP_PROJECT_ID-adk-staging \
   --display_name="SW-Anomaly-Phase1-Core-Triage" \
   agents/phase1_core_triage
 
 # Deploy Phase 2: Contextual SW Depth
 .venv/bin/adk deploy agent_engine \
-  --project=YOUR_ARGOLIS_PROJECT_ID \
+  --project=YOUR_GCP_PROJECT_ID \
   --region=us-central1 \
-  --staging_bucket=gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
+  --staging_bucket=gs://YOUR_GCP_PROJECT_ID-adk-staging \
   --display_name="SW-Anomaly-Phase2-Contextual-Depth" \
   agents/phase2_contextual_depth
 
 # Deploy Phase 3: The True Thought Partner
 .venv/bin/adk deploy agent_engine \
-  --project=YOUR_ARGOLIS_PROJECT_ID \
+  --project=YOUR_GCP_PROJECT_ID \
   --region=us-central1 \
-  --staging_bucket=gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
+  --staging_bucket=gs://YOUR_GCP_PROJECT_ID-adk-staging \
   --display_name="SW-Anomaly-Phase3-Thought-Partner" \
   agents/phase3_thought_partner
 ```
 
-### Option B: Deploy via Python Script ([`deploy_argolis.py`](./deploy_argolis.py))
+### Option B: Deploy via Python Script ([`deploy.py`](./deploy.py))
 
 Deploy all 3 agents (or a single phase with `--phase 1|2|3`):
 ```bash
-.venv/bin/python deploy_argolis.py \
-  --project YOUR_ARGOLIS_PROJECT_ID \
+.venv/bin/python deploy.py \
+  --project YOUR_GCP_PROJECT_ID \
   --location us-central1 \
-  --staging-bucket gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
+  --staging-bucket gs://YOUR_GCP_PROJECT_ID-adk-staging \
   --phase all
 ```
 
@@ -146,16 +146,16 @@ Deploy all 3 agents (or a single phase with `--phase 1|2|3`):
 
 ## 4. Adding the Agents to a Gemini Enterprise App
 
-[`deploy_argolis.py`](./deploy_argolis.py) includes built-in support for registering the deployed Vertex AI Agent Engine agents directly into a **Gemini Enterprise** (Discovery Engine / Agentspace) application via the Discovery Engine `v1alpha` API.
+[`deploy.py`](./deploy.py) includes built-in support for registering the deployed Vertex AI Agent Engine agents directly into a **Gemini Enterprise** (Discovery Engine / Agentspace) application via the Discovery Engine `v1alpha` API.
 
 ### Option A: Deploy to Vertex AI Agent Engine AND Register in Gemini Enterprise in One Step
 
 Pass `--gemini-enterprise-app-id` (or set `GEMINI_ENTERPRISE_APP_ID` in `.env`):
 ```bash
-.venv/bin/python deploy_argolis.py \
-  --project YOUR_ARGOLIS_PROJECT_ID \
+.venv/bin/python deploy.py \
+  --project YOUR_GCP_PROJECT_ID \
   --location us-central1 \
-  --staging-bucket gs://YOUR_ARGOLIS_PROJECT_ID-adk-staging \
+  --staging-bucket gs://YOUR_GCP_PROJECT_ID-adk-staging \
   --gemini-enterprise-app-id YOUR_GEMINI_ENTERPRISE_APP_ID \
   --gemini-enterprise-location global \
   --phase all
@@ -165,13 +165,13 @@ Pass `--gemini-enterprise-app-id` (or set `GEMINI_ENTERPRISE_APP_ID` in `.env`):
 
 If you already deployed an agent to Vertex AI Agent Engine (e.g., via `adk deploy agent_engine`) and have its `reasoningEngines` resource name, you can add it to your Gemini Enterprise app without redeploying:
 ```bash
-.venv/bin/python deploy_argolis.py \
-  --project YOUR_ARGOLIS_PROJECT_ID \
+.venv/bin/python deploy.py \
+  --project YOUR_GCP_PROJECT_ID \
   --gemini-enterprise-app-id YOUR_GEMINI_ENTERPRISE_APP_ID \
   --gemini-enterprise-location global \
   --register-only \
   --phase 1 \
-  --reasoning-engine projects/YOUR_ARGOLIS_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID
+  --reasoning-engine projects/YOUR_GCP_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID
 ```
 
 ### Option C: Direct REST API (`curl`) Registration
@@ -181,8 +181,8 @@ You can also register any of the 3 deployed Reasoning Engines via `curl`:
 curl -X POST \
   -H "Authorization: Bearer $(gcloud auth print-access-token)" \
   -H "Content-Type: application/json" \
-  -H "X-Goog-User-Project: YOUR_ARGOLIS_PROJECT_ID" \
-  "https://discoveryengine.googleapis.com/v1alpha/projects/YOUR_ARGOLIS_PROJECT_ID/locations/global/collections/default_collection/engines/YOUR_GEMINI_ENTERPRISE_APP_ID/assistants/default_assistant/agents" \
+  -H "X-Goog-User-Project: YOUR_GCP_PROJECT_ID" \
+  "https://discoveryengine.googleapis.com/v1alpha/projects/YOUR_GCP_PROJECT_ID/locations/global/collections/default_collection/engines/YOUR_GEMINI_ENTERPRISE_APP_ID/assistants/default_assistant/agents" \
   -d '{
     "displayName": "SW-Anomaly-Thought-Partner-Phase1-Core-Triage",
     "description": "Phase 1 (Weeks 1-2): 3-Step Core Triage (Manifestation, Triggering Event, Reproducibility)",
@@ -191,7 +191,7 @@ curl -X POST \
         "tool_description": "Use this agent when an engineer wants to quickly triage and log a software anomaly using the Phase 1 (3-step Core Triage) interview."
       },
       "provisioned_reasoning_engine": {
-        "reasoning_engine": "projects/YOUR_ARGOLIS_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID"
+        "reasoning_engine": "projects/YOUR_GCP_PROJECT_ID/locations/us-central1/reasoningEngines/YOUR_REASONING_ENGINE_ID"
       }
     }
   }'

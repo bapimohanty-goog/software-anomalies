@@ -2,7 +2,7 @@
 
 Implements the "Walk" phase of the SW Anomaly Thought Partner rollout
 using the Google Agent Development Kit (ADK) for deployment to Vertex AI Agent
-Engine in an Argolis GCP environment.
+Engine on Google Cloud.
 """
 
 import os

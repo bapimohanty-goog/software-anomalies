@@ -1,21 +1,21 @@
 """Deploy the 3 SW Anomaly Thought Partner ADK Agents to Vertex AI Agent Engine
-and optionally register them in a Gemini Enterprise (Agentspace) App in Argolis.
+and optionally register them in a Gemini Enterprise (Agentspace) App on Google Cloud.
 
 Usage:
     # 1. Deploy all 3 phases to Vertex AI Agent Engine:
-    python deploy_argolis.py --project YOUR_ARGOLIS_PROJECT_ID --staging-bucket gs://YOUR_BUCKET --phase all
+    python deploy.py --project YOUR_PROJECT_ID --staging-bucket gs://YOUR_BUCKET --phase all
 
     # 2. Deploy to Vertex AI Agent Engine AND add to a Gemini Enterprise App:
-    python deploy_argolis.py \
-      --project YOUR_ARGOLIS_PROJECT_ID \
+    python deploy.py \
+      --project YOUR_PROJECT_ID \
       --staging-bucket gs://YOUR_BUCKET \
       --gemini-enterprise-app-id YOUR_GEMINI_ENTERPRISE_APP_ID \
       --gemini-enterprise-location global \
       --phase all
 
     # 3. Register an already-deployed Reasoning Engine in a Gemini Enterprise App:
-    python deploy_argolis.py \
-      --project YOUR_ARGOLIS_PROJECT_ID \
+    python deploy.py \
+      --project YOUR_PROJECT_ID \
       --gemini-enterprise-app-id YOUR_GEMINI_ENTERPRISE_APP_ID \
       --register-only \
       --phase 1 \
@@ -197,7 +197,7 @@ def main() -> None:
     parser.add_argument(
         "--project",
         default=os.environ.get("GOOGLE_CLOUD_PROJECT"),
-        help="Argolis Google Cloud Project ID (or set GOOGLE_CLOUD_PROJECT).",
+        help="Google Cloud Project ID (or set GOOGLE_CLOUD_PROJECT).",
     )
     parser.add_argument(
         "--location",
@@ -207,7 +207,7 @@ def main() -> None:
     parser.add_argument(
         "--staging-bucket",
         default=os.environ.get("STAGING_BUCKET"),
-        help="GCS bucket URI for staging Agent Engine artifacts (e.g., gs://my-argolis-staging-bucket).",
+        help="GCS bucket URI for staging Agent Engine artifacts (e.g., gs://my-staging-bucket).",
     )
     parser.add_argument(
         "--phase",
@@ -283,7 +283,7 @@ def main() -> None:
         sys.exit(1)
 
     print(
-        f"Initializing Vertex AI in Argolis project='{args.project}', "
+        f"Initializing Vertex AI in project='{args.project}', "
         f"location='{args.location}', staging_bucket='{args.staging_bucket}'..."
     )
     vertexai.init(
